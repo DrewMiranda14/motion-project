@@ -4,6 +4,8 @@ namespace SpriteKind {
     export const LandingPad = SpriteKind.create()
 }
 sprites.onOverlap(SpriteKind.Helicopter, SpriteKind.LandingPad, function (sprite, otherSprite) {
+    info.setLife(5)
+    info.startCountdown(10)
     sprite.vx = 0
     sprite.vy = 0
     otherSprite.y += -1
@@ -34,6 +36,7 @@ sprites.onOverlap(SpriteKind.Helicopter, SpriteKind.Cloud, function (sprite, oth
     otherSprite.y += -1
     pause(100)
     otherSprite.y += 1
+    info.changeLifeBy(-1)
 })
 controller.up.onEvent(ControllerButtonEvent.Released, function () {
     copter.setVelocity(0, -5)
@@ -43,17 +46,19 @@ controller.down.onEvent(ControllerButtonEvent.Repeated, function () {
 })
 sprites.onOverlap(SpriteKind.Helicopter, SpriteKind.Food, function (sprite, otherSprite) {
     info.changeScoreBy(1)
+    fuel.setPosition(randint(10, 150), randint(10, 90))
 })
 info.onLifeZero(function () {
     info.stopCountdown()
-    game.over(false, effects.confetti)
+    game.over(false)
 })
 controller.left.onEvent(ControllerButtonEvent.Repeated, function () {
     copter.vx += -3
 })
+let fuel: Sprite = null
 let copter: Sprite = null
-info.startCountdown(10)
-info.setLife(3)
+info.startCountdown(20)
+info.setLife(5)
 scene.setBackgroundColor(9)
 copter = sprites.create(img`
     ................................
@@ -227,7 +232,7 @@ let tree = sprites.create(img`
     ...............ffceec...............
     `, SpriteKind.Cloud)
 tree.setPosition(125, 100)
-let fuel = sprites.create(img`
+fuel = sprites.create(img`
     ....................
     ........4444........
     ........5555........
